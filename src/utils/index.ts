@@ -77,8 +77,7 @@ export async function unzipFile(path: string, destination: string): Promise<void
 }
 
 export function convertToProduct(obj) {
-  const product: Product = { 
-    id: '', 
+  const product = new Product({ 
     code: obj.code,
     status: obj.status ?? PRODUCT_STATUS.draft,
     importedAt: obj.imported_t ?? new Date().toISOString(),
@@ -102,7 +101,7 @@ export function convertToProduct(obj) {
     nutriscoreGrade: obj.nutriscore_grade,
     mainCategory: obj.main_category,
     imageUrl: obj.image_url,
-  };
+  }, obj.id);
 
   return product;
 }
