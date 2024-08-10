@@ -2,7 +2,7 @@ import Product from "../../entities/Product";
 import IProductsRepository from "../IProductsRepository";
 import prismaClient from "../../prisma";
 import { convertToProduct } from "../../utils";
-import { PRODUCT_STATUS } from "../../Enums";
+import { PRODUCT_STATUS } from "../../enums";
 import IRepositoryResponse from "../IRepositoryResponse";
 
 export default class MongoProductsRepository implements IProductsRepository {

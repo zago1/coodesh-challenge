@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import UpdateProductUseCase from "./UpdateProductUseCase";
-import { RESPONSE_ERROR_MESSAGES } from "../../Enums";
+import { RESPONSE_ERROR_MESSAGES } from "../../enums";
 
 export default class UpdateProductController {
 

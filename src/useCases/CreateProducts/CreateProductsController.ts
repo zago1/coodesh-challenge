@@ -7,6 +7,6 @@ export default class CreateProductsController {
   ) {}
 
   async handle() {
-    this.createProductsUseCase.execute();
+    await this.createProductsUseCase.execute();
   }
 }

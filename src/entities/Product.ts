@@ -1,4 +1,4 @@
-import { PRODUCT_STATUS } from "../Enums";
+import { PRODUCT_STATUS } from "../enums";
 
 export type ProductStatus = 
   PRODUCT_STATUS.published | 

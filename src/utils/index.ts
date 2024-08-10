@@ -5,7 +5,7 @@ import zlib from 'node:zlib';
 import { pipeline } from 'node:stream';
 import Product from '../entities/Product';
 import FoodFileInfo from '../entities/FoodFileInfo';
-import { PRODUCT_STATUS } from '../Enums';
+import { MAX_LINES, PRODUCT_STATUS } from '../enums';
 
 type readFileLinesOptions = {
   limit?: boolean;
@@ -26,7 +26,11 @@ export async function readFileLines(path: string, options: readFileLinesOptions)
     crlfDelay: Infinity
   });
 
-  const {limit = true, startLine= 0, maxLines = 100} = options || {};
+  const limit = options.limit ?? true;
+  const startLine = options.startLine ?? 0;
+  const maxLines = options.maxLines ?? MAX_LINES;
+
+  console.log(limit, startLine, maxLines);
 
   let count = 0;
   const lines: string[] = [];
@@ -69,6 +73,7 @@ export async function unzipFile(path: string, destination: string): Promise<void
     const output = fs.createWriteStream(destination);
 
     pipeline(input, unzip, output, (err) => {
+      unlinkFile(path);
       if (err) { return reject(err); }
 
       return resolve();

@@ -1,8 +1,11 @@
 import { Router } from "express";
+import cron from 'node-cron';
+
 import { getProductByCodeController } from "./useCases/GetProductByCode";
 import { deleteProductController } from "./useCases/DeleteProduct";
 import { updateProductController } from "./useCases/UpdateProduct";
 import { getProductsController } from "./useCases/GetProducts";
+import { dateTimeValue, cronFunction } from "./cronScheduleConfig"
 
 const router = Router();
 
@@ -24,6 +27,10 @@ router.delete("/products/:code", (request, response) => {
 
 router.put("/products/:code", (request, response) => {
   return updateProductController.handle(request, response);
-})
+});
+
+cron.schedule(dateTimeValue, cronFunction);
+// cronFunction();
+
 
 export default router;

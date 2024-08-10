@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import DeleteProductUseCase from "./DeleteProductUseCase";
-import { RESPONSE_ERROR_MESSAGES } from "../../Enums";
+import { RESPONSE_ERROR_MESSAGES } from "../../enums";
 
 export default class DeleteProductController {
   constructor(

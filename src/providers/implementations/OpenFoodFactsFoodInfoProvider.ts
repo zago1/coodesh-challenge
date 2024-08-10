@@ -1,11 +1,11 @@
 import FoodFileInfo from "../../entities/FoodFileInfo";
 import Product from "../../entities/Product";
+import { MAX_LINES } from "../../enums";
 import { convertToProduct, downloadFile, readFileLines, readJsonFileLines, unlinkFile, unzipFile } from "../../utils";
 import IFoodInfoProvider, { IFoodFactsInfo } from "../IFoodInfoProvider";
 
 const BASE_FILE_URL = 'https://challenges.coode.sh/food/data/json';
 const BASE_FILE_NAME = 'index.txt';
-const MAX_LINES = 100;
 
 export default class OpenFoodFactsFoodInfoProvider implements IFoodInfoProvider {
 
@@ -14,6 +14,7 @@ export default class OpenFoodFactsFoodInfoProvider implements IFoodInfoProvider 
   constructor() {}
 
   private async getFileInfo(filePath: string): Promise<Product[]> {
+    try {
       const url = `${BASE_FILE_URL}/${filePath}`;
       await downloadFile(url, filePath);
       
@@ -22,10 +23,13 @@ export default class OpenFoodFactsFoodInfoProvider implements IFoodInfoProvider 
       unlinkFile(filePath);
 
       const fileInfoIdx = this.findFileInfoIdx(fileName);
+      
+      const startLine = fileInfoIdx >= 0 
+      ? this.files[fileInfoIdx].startLine : 0;
       const lines = await readJsonFileLines(fileName, 
-        { 
-          startLine: fileInfoIdx >= 0 ? this.files[fileInfoIdx].startLine : 0, 
-          maxLines: MAX_LINES 
+        {
+          startLine,
+          maxLines: startLine + MAX_LINES 
         }
       );
       
@@ -34,6 +38,9 @@ export default class OpenFoodFactsFoodInfoProvider implements IFoodInfoProvider 
       this.updateFileInfoStartLine(fileInfoIdx, fileName);
 
       return lines.map(line => convertToProduct(line))
+    } catch (error) {
+      console.log('[ERROR][GET FILE INFO]', error);
+    }
   }
 
   private updateFileInfoStartLine(idx: number, fileName: string) {

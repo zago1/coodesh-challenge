@@ -22,15 +22,22 @@ export default class CreateProductUseCase {
   }
 
   async execute() {
-    const files = await this.filesInfoRepository.findAll();
-    const { products, filesInfo } = await this.foodInfoProvider.getFoodFactsInfo(files);
-    
-    console.log('[products]', products.length);
+    try {
+      const files = await this.filesInfoRepository.findAll();
+      const { products, filesInfo } = await this.foodInfoProvider.getFoodFactsInfo(files);
 
-    await this.productRepository.insertAll(products);
-    console.log('[INSERTED PRODUCTS]')
-    await this.saveFilesInfo(filesInfo);
-    console.log('[SAVE FILES INFO]')
+      if (!products.length) {
+        console.log('NOTHING TO INSERT');
+        return;
+      }
+  
+      await this.productRepository.insertAll(products);
+      console.log('[INSERTED PRODUCTS]')
+      await this.saveFilesInfo(filesInfo);
+      console.log('[SAVE FILES INFO]');
+    } catch (err) {
+      console.log('[execute][err]', err);
+    }
 
   }
 }
