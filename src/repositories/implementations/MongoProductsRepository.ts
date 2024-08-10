@@ -35,12 +35,23 @@ export default class MongoProductsRepository implements IProductsRepository {
     }
   }
 
-  async findAll(): Promise<IRepositoryResponse<Product[]>> {
-    const products = await prismaClient.products.findMany();
+  async findAll(skip: number, take: number): Promise<IRepositoryResponse<Product[]>> {
+    const products = await prismaClient.products.findMany({
+      where: {
+        status: {
+          not: PRODUCT_STATUS.trash
+        }
+      },
+      skip,
+      take
+    });
+
+    const totalRows = await prismaClient.products.count();
 
     return {
       status: true,
-      value: products.map((product) => convertToProduct(product))
+      value: products.map((product) => convertToProduct(product)),
+      metadata: { totalRows }
     };
   }
 

@@ -2,7 +2,7 @@ import Product from "../entities/Product";
 import IRepositoryResponse from "./IRepositoryResponse";
 
 export default interface IProductsRepository {
-  findAll(): Promise<IRepositoryResponse<Product[]>>;
+  findAll(skip: number, take: number): Promise<IRepositoryResponse<Product[]>>;
   findByCode(code: string): Promise<IRepositoryResponse<Product>>;
   insert(product: Product): Promise<void>;
   insertAll(products: Product[]): Promise<void>;
