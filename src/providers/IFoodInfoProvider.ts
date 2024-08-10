@@ -7,5 +7,5 @@ export interface IFoodFactsInfo {
 }
 
 export default interface IFoodInfoProvider {
-  getFoodFactsInfo(): Promise<IFoodFactsInfo>;
+  getFoodFactsInfo(files: FoodFileInfo[]): Promise<IFoodFactsInfo>;
 }

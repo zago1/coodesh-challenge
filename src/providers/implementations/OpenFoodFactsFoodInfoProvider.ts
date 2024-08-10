@@ -1,6 +1,7 @@
 import FoodFileInfo from "../../entities/FoodFileInfo";
 import Product from "../../entities/Product";
-import { convertToProduct, downloadFile, readFileLines, readJsonFileLines, unlinkFile, unzipFile } from "../../utils";
+import IFilesInfoRepository from "../../repositories/IFilesInfoRepository";
+import { convertToFooFileInfo, convertToProduct, downloadFile, readFileLines, readJsonFileLines, unlinkFile, unzipFile } from "../../utils";
 import IFoodInfoProvider, { IFoodFactsInfo } from "../IFoodInfoProvider";
 
 const BASE_FILE_URL = 'https://challenges.coode.sh/food/data/json';
@@ -9,9 +10,9 @@ const MAX_LINES = 100;
 
 export default class OpenFoodFactsFoodInfoProvider implements IFoodInfoProvider {
 
-  constructor(
-    private files: FoodFileInfo[],
-  ) {}
+  private files: FoodFileInfo[];
+
+  constructor() {}
 
   private async getFileInfo(filePath: string): Promise<Product[]> {
       const url = `${BASE_FILE_URL}/${filePath}`;
@@ -57,21 +58,17 @@ export default class OpenFoodFactsFoodInfoProvider implements IFoodInfoProvider 
     return fileInfoIdx;
   }
 
-  async getFoodFactsInfo(): Promise<IFoodFactsInfo> {
+  async getFoodFactsInfo(files: FoodFileInfo[]): Promise<IFoodFactsInfo> {
+    this.files = files;
     await downloadFile(`${BASE_FILE_URL}/${BASE_FILE_NAME}`, BASE_FILE_NAME);
     const fileLines = await readFileLines(BASE_FILE_NAME, { limit: false });
     unlinkFile(BASE_FILE_NAME);
 
     const products: Product[] = [];
-    let count = 0;
     for await (const filename of fileLines) {
       const p = await this.getFileInfo(filename);
       products.push(...p);
-
-      if (count == 2) { break; }
-      count++;
     }
-
     return { products, filesInfo: this.files };
   }
 }
