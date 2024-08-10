@@ -1,5 +1,9 @@
+import { PRODUCT_STATUS } from "../Enums";
 
-export type ProductStatus = 'published' | 'trash' | 'draft';
+export type ProductStatus = 
+  PRODUCT_STATUS.published | 
+  PRODUCT_STATUS.trash | 
+  PRODUCT_STATUS.draft;
 
 export default class Product {
 
