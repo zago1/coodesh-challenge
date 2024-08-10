@@ -2,6 +2,7 @@ import Product from "../../entities/Product";
 import IProductsRepository from "../IProductsRepository";
 import prismaClient from "../../prisma";
 import { convertToProduct } from "../../utils";
+import { PRODUCT_STATUS } from "../../Enums";
 
 export default class MongoProductsRepository implements IProductsRepository {
 
@@ -44,16 +45,33 @@ export default class MongoProductsRepository implements IProductsRepository {
     return convertToProduct(product);
   }
 
-  async save(product: Product): Promise<void> {
+  async insert(product: Product): Promise<void> {
     await prismaClient.products.create({
       data: this.convertToMongoDBProduct(product),
     });
   }
 
-  async saveAll(products: Product[]): Promise<void> {
+  async insertAll(products: Product[]): Promise<void> {
     const data = products.map(product => this.convertToMongoDBProduct(product));
-    await prismaClient.products.createMany({
-      data
+    await prismaClient.products.createMany({ data });
+  }
+
+  async update(product: Product): Promise<Product> {
+    const data = this.convertToMongoDBProduct(product);
+    const updatedProduct = await prismaClient.products.update({
+      data,
+      where: {
+        code: data.code
+      }
+    });
+
+    return convertToProduct(updatedProduct);
+  }
+
+  async delete(code: string): Promise<void> {
+    await prismaClient.products.update({
+      data: { status: PRODUCT_STATUS.trash },
+      where: { code }
     })
   }
 
