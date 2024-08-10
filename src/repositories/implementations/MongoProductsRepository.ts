@@ -3,6 +3,7 @@ import IProductsRepository from "../IProductsRepository";
 import prismaClient from "../../prisma";
 import { convertToProduct } from "../../utils";
 import { PRODUCT_STATUS } from "../../Enums";
+import IRepositoryResponse from "../IRepositoryResponse";
 
 export default class MongoProductsRepository implements IProductsRepository {
 
@@ -34,15 +35,26 @@ export default class MongoProductsRepository implements IProductsRepository {
     }
   }
 
-  async findAll(): Promise<Product[]> {
+  async findAll(): Promise<IRepositoryResponse<Product[]>> {
     const products = await prismaClient.products.findMany();
 
-    return products.map((product) => convertToProduct(product));
+    return {
+      status: true,
+      value: products.map((product) => convertToProduct(product))
+    };
   }
 
-  async findByCode(code: string): Promise<Product> {
-    const product = await prismaClient.products.findFirst({ where: { code } });
-    return convertToProduct(product);
+  async findByCode(code: string): Promise<IRepositoryResponse<Product>> {
+    const product = await prismaClient.products.findUnique({ 
+      where: {
+        code
+      }
+    });
+
+    return {
+      status: !!product,
+      value: !!product ? convertToProduct(product) : null
+    };
   }
 
   async insert(product: Product): Promise<void> {
@@ -56,7 +68,7 @@ export default class MongoProductsRepository implements IProductsRepository {
     await prismaClient.products.createMany({ data });
   }
 
-  async update(product: Product): Promise<Product> {
+  async update(product: Product): Promise<IRepositoryResponse<Product>> {
     const data = this.convertToMongoDBProduct(product);
     const updatedProduct = await prismaClient.products.update({
       data,
@@ -65,7 +77,10 @@ export default class MongoProductsRepository implements IProductsRepository {
       }
     });
 
-    return convertToProduct(updatedProduct);
+      return {
+        status: !!updatedProduct,
+        value: !!updatedProduct ? convertToProduct(updatedProduct) : null
+      }
   }
 
   async delete(code: string): Promise<void> {

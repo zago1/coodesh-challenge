@@ -1,10 +1,11 @@
 import Product from "../entities/Product";
+import IRepositoryResponse from "./IRepositoryResponse";
 
 export default interface IProductsRepository {
-  findAll(): Promise<Product[]>;
-  findByCode(code: string): Promise<Product>;
+  findAll(): Promise<IRepositoryResponse<Product[]>>;
+  findByCode(code: string): Promise<IRepositoryResponse<Product>>;
   insert(product: Product): Promise<void>;
   insertAll(products: Product[]): Promise<void>;
-  update(product: Product): Promise<Product>;
+  update(product: Product): Promise<IRepositoryResponse<Product>>;
   delete(code: string): Promise<void>;
 }
