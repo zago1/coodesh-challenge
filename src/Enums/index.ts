@@ -3,3 +3,8 @@ export enum PRODUCT_STATUS {
   trash = 'trash',
   draft = 'draft'
 }
+
+export enum RESPONSE_ERROR_MESSAGES {
+  PRODUCT_NOT_FOUND,
+  SOMETHING_WENT_WRONG
+}
