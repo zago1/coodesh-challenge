@@ -41,3 +41,12 @@ model Products {
 
   @@map("products")
 }
+
+model FilesInfo {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  name String
+  start_line Int
+  last_update DateTime
+
+  @@map("files_info")
+}
