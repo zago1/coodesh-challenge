@@ -1,24 +1,36 @@
-import http from 'http';
+import https from 'https';
 import fs from 'fs';
 import readline from 'readline';
+import zlib from 'node:zlib';
+import { pipeline } from 'node:stream';
+import Product from '../entities/Product';
 
-export async function readJsonFileLines(path: string, limit: boolean = true, maxLines: number = 100) {
-  const lines = await readFileLines(path, limit, maxLines);
+type readFileLinesOptions = {
+  limit?: boolean;
+  startLine?: number;
+  maxLines?: number;
+} | undefined
+
+export async function readJsonFileLines(path: string, options?: readFileLinesOptions | undefined) {
+  const lines = await readFileLines(path, options);
 
   return lines.map(line => JSON.parse(line));
 }
 
-export async function readFileLines(path: string, limit: boolean = true, maxLines: number = 100): Promise<string[]> {
+export async function readFileLines(path: string, options: readFileLinesOptions): Promise<string[]> {
   const fileStream = fs.createReadStream(path);
   const rl = readline.createInterface({
     input: fileStream,
     crlfDelay: Infinity
   });
 
+  const {limit = true, startLine= 0, maxLines = 100} = options || {};
+
   let count = 0;
   const lines: string[] = [];
   for await (const line of rl) {
-    if (limit && count >= maxLines) { break; }
+    if (limit && count < startLine) { count++; continue; }
+    if (limit && (count >= maxLines)) { break; }
     count++;
     lines.push(line);
   }
@@ -28,21 +40,67 @@ export async function readFileLines(path: string, limit: boolean = true, maxLine
   return lines;
 }
 
-export async function downloadFile(path: string, output: string): Promise<void> {
+export async function downloadFile(path: string, destination: string): Promise<void> {
   return new Promise((resolve, reject) => {
-    const fileStream = fs.createWriteStream(output);
+    const fileStream = fs.createWriteStream(destination);
   
-    http.get(path, (response) => {
+    https.get(path, (response) => {
       response.pipe(fileStream);
       fileStream.on('finish', () => {
         fileStream.close(() => resolve());
       });
     }).on('error', (err) => {
-      unlinkFile(output, () => reject(err));
+      unlinkFile(destination, () => reject(err));
     })
   })
 }
 
-export function unlinkFile(path: string, cb: () => void) {
-  fs.unlink(path, cb);
+export function unlinkFile(path: string, cb?: () => void) {
+  const func = () => {};
+  fs.unlink(path, cb ?? func);
+}
+
+export async function unzipFile(path: string, destination: string): Promise<void> {
+  return new Promise((resolve, reject) => {
+    const unzip = zlib.createUnzip();
+    const input = fs.createReadStream(path);
+    const output = fs.createWriteStream(destination);
+
+    pipeline(input, unzip, output, (err) => {
+      if (err) { return reject(err); }
+
+      return resolve();
+    })
+  })
+}
+
+export function convertToProduct(obj) {
+  const product: Product = { 
+    id: '', 
+    code: obj.code,
+    status: 'draft',
+    importedAt: new Date().toISOString(),
+    url: obj.url,
+    creator: obj.creator,
+    createdAt: obj.created_t,
+    lastModifiedAt: obj.last_modified_t,
+    productName: obj.product_name,
+    quantity: obj.quantity,
+    brands: obj.brands,
+    categories: obj.categories,
+    labels: obj.labels,
+    cities: obj.cities,
+    purchasePlaces: obj.purchase_places,
+    stores: obj.stores,
+    ingredientsText: obj.ingredients_text,
+    traces: obj.traces,
+    servingSize: obj.serving_size,
+    servingQuantity: obj.serving_quantity,
+    nutriscoreScore: obj.nutriscore_score,
+    nutriscoreGrade: obj.nutriscore_grade,
+    mainCategory: obj.main_category,
+    imageUrl: obj.image_url,
+  };
+
+  return product;
 }
