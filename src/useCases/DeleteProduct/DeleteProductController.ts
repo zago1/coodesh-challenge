@@ -15,7 +15,7 @@ export default class DeleteProductController {
       return response.status(200).send();
     } catch (err) {
       console.log('[err]', err);
-      return response.status(500).send(RESPONSE_ERROR_MESSAGES.SOMETHING_WENT_WRONG);
+      return response.sendStatus(500)
     }
   }
 }

@@ -6,6 +6,6 @@ export default interface IProductsRepository {
   findByCode(code: string): Promise<IRepositoryResponse<Product>>;
   insert(product: Product): Promise<void>;
   insertAll(products: Product[]): Promise<void>;
-  update(product: Product): Promise<IRepositoryResponse<Product>>;
+  update(code: string, product: Product): Promise<IRepositoryResponse<Product>>;
   delete(code: string): Promise<void>;
 }

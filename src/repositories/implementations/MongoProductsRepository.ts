@@ -68,12 +68,12 @@ export default class MongoProductsRepository implements IProductsRepository {
     await prismaClient.products.createMany({ data });
   }
 
-  async update(product: Product): Promise<IRepositoryResponse<Product>> {
-    const data = this.convertToMongoDBProduct(product);
+  async update(code: string, product: Product): Promise<IRepositoryResponse<Product>> {
+    const data = this.convertToMongoDBProduct({...product, code});
     const updatedProduct = await prismaClient.products.update({
       data,
       where: {
-        code: data.code
+        code
       }
     });
 
