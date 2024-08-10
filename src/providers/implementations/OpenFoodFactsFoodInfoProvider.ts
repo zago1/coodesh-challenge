@@ -1,7 +1,6 @@
 import FoodFileInfo from "../../entities/FoodFileInfo";
 import Product from "../../entities/Product";
-import IFilesInfoRepository from "../../repositories/IFilesInfoRepository";
-import { convertToFooFileInfo, convertToProduct, downloadFile, readFileLines, readJsonFileLines, unlinkFile, unzipFile } from "../../utils";
+import { convertToProduct, downloadFile, readFileLines, readJsonFileLines, unlinkFile, unzipFile } from "../../utils";
 import IFoodInfoProvider, { IFoodFactsInfo } from "../IFoodInfoProvider";
 
 const BASE_FILE_URL = 'https://challenges.coode.sh/food/data/json';
