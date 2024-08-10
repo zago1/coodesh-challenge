@@ -3,7 +3,8 @@ import FoodFileInfo from "../entities/FoodFileInfo";
 
 export default interface IFilesInfoRepository {
   findAll(): Promise<FoodFileInfo[]>;
-  findByCode(code: string): Promise<FoodFileInfo>;
-  save(product: FoodFileInfo): Promise<void>;
-  saveAll(products: FoodFileInfo[]): Promise<void>;
+  findById(id: string): Promise<FoodFileInfo>;
+  insert(fileInfo: FoodFileInfo): Promise<void>;
+  insertAll(fileInfos: FoodFileInfo[]): Promise<void>;
+  update(fileInfo: FoodFileInfo): Promise<FoodFileInfo>;
 }
