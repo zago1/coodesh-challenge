@@ -4,7 +4,7 @@ import MongoProductsRepository from "./repositories/implementations/MongoProduct
 import CreateProductsController from "./useCases/CreateProducts/CreateProductsController";
 import CreateProductUseCase from "./useCases/CreateProducts/CreateProductsUseCase";
 
-const dateTimeValue = '6 9 * * *';
+const dateTimeValue = '0 0 * * *';
 
 async function cronFunction() {
   const openFoodFactsFoodInfoProvider = new OpenFoodFactsFoodInfoProvider();
