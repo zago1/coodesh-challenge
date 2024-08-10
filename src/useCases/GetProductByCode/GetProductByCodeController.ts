@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import GetProductByCodeUseCase from "./GetProductByCodeUseCase";
+import { RESPONSE_ERROR_MESSAGES } from "../../Enums";
 
 export default class GetProductByCodeController {
   constructor(
@@ -16,11 +17,11 @@ export default class GetProductByCodeController {
         return response.status(200).send(value);
       }
 
-      return response.status(400).send("PRODUCT_NOT_FOUND");
+      return response.status(400).send(RESPONSE_ERROR_MESSAGES.PRODUCT_NOT_FOUND);
 
     } catch (err) {
       console.log('[err]', err);
-      return response.status(500).send("SOMETHING_WENT_WRONG");
+      return response.status(500).send(RESPONSE_ERROR_MESSAGES.SOMETHING_WENT_WRONG);
     }
 
 
