@@ -4,6 +4,8 @@ import readline from 'readline';
 import zlib from 'node:zlib';
 import { pipeline } from 'node:stream';
 import Product from '../entities/Product';
+import FoodFileInfo from '../entities/FoodFileInfo';
+import { PRODUCT_STATUS } from '../Enums';
 
 type readFileLinesOptions = {
   limit?: boolean;
@@ -78,8 +80,8 @@ export function convertToProduct(obj) {
   const product: Product = { 
     id: '', 
     code: obj.code,
-    status: 'draft',
-    importedAt: new Date().toISOString(),
+    status: obj.status ?? PRODUCT_STATUS.draft,
+    importedAt: obj.imported_t ?? new Date().toISOString(),
     url: obj.url,
     creator: obj.creator,
     createdAt: obj.created_t,
@@ -95,12 +97,22 @@ export function convertToProduct(obj) {
     ingredientsText: obj.ingredients_text,
     traces: obj.traces,
     servingSize: obj.serving_size,
-    servingQuantity: obj.serving_quantity,
-    nutriscoreScore: obj.nutriscore_score,
+    servingQuantity: !!obj.serving_quantity ? parseFloat(obj.serving_quantity) : 0.0,
+    nutriscoreScore: !!obj.nutriscore_score ? parseInt(obj.nutriscore_score) : 0,
     nutriscoreGrade: obj.nutriscore_grade,
     mainCategory: obj.main_category,
     imageUrl: obj.image_url,
   };
 
   return product;
+}
+
+export function convertToFoodFileInfo(obj) {
+  const foodFileInfo: FoodFileInfo = {
+    id: obj.id,
+    lastUpdate: obj.last_update?.toISOString(),
+    name: obj.name,
+    startLine: obj.start_line
+  };
+  return foodFileInfo;
 }

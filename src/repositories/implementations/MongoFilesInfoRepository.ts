@@ -1,7 +1,7 @@
 import FoodFileInfo from "../../entities/FoodFileInfo";
 import IFilesInfoRepository from "../IFilesInfoRepository";
 import prismaClient from "../../prisma";
-import { convertToFooFileInfo } from "../../utils";
+import { convertToFoodFileInfo } from "../../utils";
 
 export default class MongoFilesInfoRepository implements IFilesInfoRepository {
 
@@ -17,13 +17,13 @@ export default class MongoFilesInfoRepository implements IFilesInfoRepository {
   async findAll(): Promise<FoodFileInfo[]> {
     const fileInfos = await prismaClient.filesInfo.findMany();
 
-    return fileInfos.map((fileInfo) => convertToFooFileInfo(fileInfo));
+    return fileInfos.map((fileInfo) => convertToFoodFileInfo(fileInfo));
   }
 
   async findById(id: string): Promise<FoodFileInfo> {
     const fileInfo = await prismaClient.filesInfo.findFirst({ where: { id } });
 
-    return convertToFooFileInfo(fileInfo);
+    return convertToFoodFileInfo(fileInfo);
 
   }
 
@@ -49,7 +49,7 @@ export default class MongoFilesInfoRepository implements IFilesInfoRepository {
       where: { id: data.id } 
     });
 
-    return convertToFooFileInfo(updatedFileInfo);
+    return convertToFoodFileInfo(updatedFileInfo);
   }
   
 }
