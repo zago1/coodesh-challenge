@@ -50,3 +50,9 @@ model FilesInfo {
 
   @@map("files_info")
 }
+
+model CronUpdate {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  date_time DateTime
+  status String
+}
