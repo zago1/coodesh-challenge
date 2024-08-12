@@ -3,6 +3,8 @@ import fs from 'fs';
 import readline from 'readline';
 import zlib from 'node:zlib';
 import { pipeline } from 'node:stream';
+import process from 'node:process'
+
 import Product from '../entities/Product';
 import FoodFileInfo from '../entities/FoodFileInfo';
 import { MAX_LINES, PRODUCT_STATUS } from '../enums';
@@ -119,4 +121,19 @@ export function convertToFoodFileInfo(obj) {
     startLine: obj.start_line
   };
   return foodFileInfo;
+}
+
+export function memoryUsageFormatter(data) {
+  return `${Math.round(data / 1024 / 1024 * 100) / 100} MB`
+};
+
+export function getMemoryUsage() {
+  const memoryUsage = process.memoryUsage();
+
+  return {
+    rss: memoryUsageFormatter(memoryUsage.rss),
+    heapTotal: memoryUsageFormatter(memoryUsage.heapTotal),
+    heapUsed: memoryUsageFormatter(memoryUsage.heapUsed),
+    external: memoryUsageFormatter(memoryUsage.external),
+  }
 }
