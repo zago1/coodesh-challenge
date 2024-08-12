@@ -1,7 +1,5 @@
 # Desafio Backend - Challeng by Coodesh
 
-#### Backend Challenge 20230105
-
 ### Descrição
 
 O projeto é uma API de Parser de Produtos.
@@ -34,3 +32,5 @@ A API foi criada utilizando os princípios `SOLID`.
  - Rodar o comando `npx prisma generate` para criar as `Collections` no MongoDB;
  - Rodar o comando `npm run start` para executar o projeto;
  - Obs.: para configurar o horário que a task de cadastrar os produtos irá rodar, configure o arquivo `src/cronScheduleConfig.ts` alterando o valor de `dateTimeValue`
+
+#### Backend Challenge 20230105
