@@ -6,11 +6,12 @@ import { deleteProductController } from "./useCases/DeleteProduct";
 import { updateProductController } from "./useCases/UpdateProduct";
 import { getProductsController } from "./useCases/GetProducts";
 import { dateTimeValue, cronFunction } from "./cronScheduleConfig"
+import { getApiInfoController } from "./useCases/GetApiInfo";
 
 const router = Router();
 
 router.get("/", (request, response) => {
-  return response.status(201).send("OK!");
+  return getApiInfoController.handle(request, response);
 });
 
 router.get("/products", (request, response) => {
@@ -30,7 +31,6 @@ router.put("/products/:code", (request, response) => {
 });
 
 cron.schedule(dateTimeValue, cronFunction);
-// cronFunction();
 
 
 export default router;
