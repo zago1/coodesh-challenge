@@ -7,7 +7,7 @@ import process from 'node:process'
 
 import Product from '../entities/Product';
 import FoodFileInfo from '../entities/FoodFileInfo';
-import { MAX_LINES, PRODUCT_STATUS } from '../enums';
+import { MAX_LINES, PRODUCT_STATUS } from '../Enums';
 
 type readFileLinesOptions = {
   limit?: boolean;
