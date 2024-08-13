@@ -1,6 +1,6 @@
 import FoodFileInfo from "../../entities/FoodFileInfo";
 import Product from "../../entities/Product";
-import { MAX_LINES } from "../../enums";
+import { MAX_LINES } from "../../Enums";
 import { convertToProduct, downloadFile, readFileLines, readJsonFileLines, unlinkFile, unzipFile } from "../../utils";
 import IFoodInfoProvider, { IFoodFactsInfo } from "../IFoodInfoProvider";
 
